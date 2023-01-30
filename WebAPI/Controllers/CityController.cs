@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Data;
-//using WebAPI.Models;
+using WebAPI.Data.Repository.IRepository;
+using WebAPI.Models;
+
 
 namespace WebAPI.Controllers
 {
@@ -12,19 +9,35 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
-        private readonly DataContext _conContext;
-        public CityController(DataContext conContext)
+        private readonly ICityRepository _cityRepo;
+
+        public CityController(ICityRepository cityRepo)
         {
-            _conContext = conContext;
+            _cityRepo = cityRepo;
         }
 
-        [HttpGet("")]
-        public IActionResult Get()
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            var cities = _conContext.Cities?.ToList();
+            var cities = await _cityRepo.GetCitiesAsync();
             return Ok(cities);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post(City city)
+        {            
+            _cityRepo.AddCity(city);
+            await _cityRepo.SaveAsync();
+            return StatusCode(201);            
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            _cityRepo.DeleteCity(id);            
+            await _cityRepo.SaveAsync();
+            return Ok(id);
+        }
         
     }
 }
