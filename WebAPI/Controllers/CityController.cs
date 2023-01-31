@@ -24,6 +24,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            throw new UnauthorizedAccessException();
             var cities = await _unitOfWork.CityRepository.GetCitiesAsync();
             var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
             return Ok(citiesDto);
@@ -56,6 +57,8 @@ namespace WebAPI.Controllers
                 dbCity!.LastUpdatedBy = 1;
                 dbCity.LastUpdatedOn = DateTime.UtcNow;
                 _mapper.Map(cityDto,dbCity);
+
+                throw new Exception("Some unknown error occured");
                 await _unitOfWork.SaveAsync();
                 return StatusCode(200);   
             // }

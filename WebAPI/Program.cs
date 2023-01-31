@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebAPI.CustomMiddlewares;
 using WebAPI.Data;
 using WebAPI.IRepository;
 using WebAPI.Mapper;
@@ -27,7 +28,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// handling exception globally.
+//app.ConfigureExceptionHandler();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 app.UseAuthorization();
 
 app.MapControllers();
