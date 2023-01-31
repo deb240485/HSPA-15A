@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
-using WebAPI.Data.Repository;
 using WebAPI.IRepository;
 using WebAPI.Mapper;
 
@@ -10,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

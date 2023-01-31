@@ -1,4 +1,5 @@
 using AutoMapper;
+//using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos;
 using WebAPI.IRepository;
@@ -39,6 +40,31 @@ namespace WebAPI.Controllers
             await _unitOfWork.SaveAsync();
             return StatusCode(201);            
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id,CityDto cityDto)
+        {
+            var dbCity = await _unitOfWork.CityRepository.FindCity(id);
+            dbCity!.LastUpdatedBy = 1;
+            dbCity.LastUpdatedOn = DateTime.UtcNow;
+            _mapper.Map(cityDto,dbCity);
+            await _unitOfWork.SaveAsync();
+            return StatusCode(200); 
+        }
+
+        //We will not use patch for any update request because of its flexibility to the users, moreover it is available with independent package "Newtonsoft.json".
+
+        // [HttpPatch("{id}")]
+        // public async Task<IActionResult> Patch(int id, JsonPatchDocument<City> cityToPatch)
+        // {
+        //     var dbCity = await _unitOfWork.CityRepository.FindCity(id);
+        //     dbCity!.LastUpdatedBy = 1;
+        //     dbCity.LastUpdatedOn = DateTime.UtcNow;
+
+        //     cityToPatch.ApplyTo(dbCity, ModelState);
+        //     await _unitOfWork.SaveAsync();
+        //     return StatusCode(200);
+        // }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
