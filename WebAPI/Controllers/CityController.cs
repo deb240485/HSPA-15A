@@ -44,12 +44,25 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id,CityDto cityDto)
         {
-            var dbCity = await _unitOfWork.CityRepository.FindCity(id);
-            dbCity!.LastUpdatedBy = 1;
-            dbCity.LastUpdatedOn = DateTime.UtcNow;
-            _mapper.Map(cityDto,dbCity);
-            await _unitOfWork.SaveAsync();
-            return StatusCode(200); 
+            // try
+            // {
+                if(id != cityDto.Id){
+                    return BadRequest("Update not allowed");
+                }
+                var dbCity = await _unitOfWork.CityRepository.FindCity(id);
+                if(dbCity == null){
+                    return BadRequest("Update not allowed");
+                }
+                dbCity!.LastUpdatedBy = 1;
+                dbCity.LastUpdatedOn = DateTime.UtcNow;
+                _mapper.Map(cityDto,dbCity);
+                await _unitOfWork.SaveAsync();
+                return StatusCode(200);   
+            // }
+            // catch (System.Exception ex)
+            // {
+            //     return StatusCode(500,"Some unknown error");
+            // }             
         }
 
         //We will not use patch for any update request because of its flexibility to the users, moreover it is available with independent package "Newtonsoft.json".
