@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebAPI.CustomMiddlewares;
+using WebAPI.Extensions;
 using WebAPI.Data;
 using WebAPI.IRepository;
 using WebAPI.Mapper;
@@ -29,9 +29,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // handling exception globally.
-//app.ConfigureExceptionHandler();
+app.ConfigureCustomExceptionHandler();
 
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 

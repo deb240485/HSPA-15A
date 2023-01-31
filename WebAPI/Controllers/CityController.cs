@@ -1,5 +1,4 @@
 using AutoMapper;
-//using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos;
 using WebAPI.IRepository;
@@ -24,7 +23,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            throw new UnauthorizedAccessException();
+            //throw new UnauthorizedAccessException();
             var cities = await _unitOfWork.CityRepository.GetCitiesAsync();
             var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
             return Ok(citiesDto);
@@ -45,27 +44,21 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id,CityDto cityDto)
         {
-            // try
-            // {
-                if(id != cityDto.Id){
-                    return BadRequest("Update not allowed");
-                }
-                var dbCity = await _unitOfWork.CityRepository.FindCity(id);
-                if(dbCity == null){
-                    return BadRequest("Update not allowed");
-                }
-                dbCity!.LastUpdatedBy = 1;
-                dbCity.LastUpdatedOn = DateTime.UtcNow;
-                _mapper.Map(cityDto,dbCity);
+            
+            if(id != cityDto.Id){
+                return BadRequest("Update not allowed");
+            }
+            var dbCity = await _unitOfWork.CityRepository.FindCity(id);
+            if(dbCity == null){
+                return BadRequest("Update not allowed");
+            }
+            dbCity!.LastUpdatedBy = 1;
+            dbCity.LastUpdatedOn = DateTime.UtcNow;
+            _mapper.Map(cityDto,dbCity);
 
-                throw new Exception("Some unknown error occured");
-                await _unitOfWork.SaveAsync();
-                return StatusCode(200);   
-            // }
-            // catch (System.Exception ex)
-            // {
-            //     return StatusCode(500,"Some unknown error");
-            // }             
+            //throw new Exception("Some unknown error occured");
+            await _unitOfWork.SaveAsync();
+            return StatusCode(200);                        
         }
 
         //We will not use patch for any update request because of its flexibility to the users, moreover it is available with independent package "Newtonsoft.json".
