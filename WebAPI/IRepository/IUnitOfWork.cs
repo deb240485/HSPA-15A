@@ -4,6 +4,8 @@ namespace WebAPI.IRepository
     {
         ICityRepository CityRepository { get; }
 
+        IUserRepository UserRepository { get; }
+
         Task<bool> SaveAsync();
     }
 }

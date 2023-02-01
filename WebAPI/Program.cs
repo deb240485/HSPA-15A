@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebAPI.Extensions;
 using WebAPI.Data;
 using WebAPI.IRepository;
 using WebAPI.Mapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,24 @@ builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
+//var secretKey = builder.Configuration.GetSection("AppSettings:Key").Value;
+
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration.GetSection("AppSettings").GetChildren().FirstOrDefault(j => j.Key == "key")!.Value
+            ));
+
+//var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("shh...this is my top secret"));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters{
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            IssuerSigningKey = key
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,6 +55,8 @@ app.ConfigureCustomExceptionHandler();
 //app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
