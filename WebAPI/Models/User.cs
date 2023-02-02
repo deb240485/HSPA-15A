@@ -8,6 +8,8 @@ namespace WebAPI.Models
         [Required]
         public string? userName { get; set; }
         [Required]
-        public string? password { get; set; }
+        public byte[]? password { get; set; }
+
+        public byte[]? passwordKey { get; set; }
     }
 }

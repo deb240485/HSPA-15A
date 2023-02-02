@@ -54,6 +54,10 @@ app.ConfigureCustomExceptionHandler();
 
 //app.UseMiddleware<ExceptionMiddleware>();
 
+//app.UseHsts();
+
+//app.UseHttpsRedirection();
+
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseAuthentication();

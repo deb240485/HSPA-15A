@@ -19,6 +19,18 @@ namespace WebAPI.Controllers
             _configuration = configuration;
        }
 
+       [HttpPost("Register")]
+       public async Task<IActionResult> Register(LoginReqDto loginReq)
+       {
+            if(await _unitOfWork.UserRepository.UserAlreadyExists(loginReq.userName!))
+                return BadRequest("User already exists , please try different User Name.");
+            
+            _unitOfWork.UserRepository.Register(loginReq.userName!,loginReq.password!);
+
+            await _unitOfWork.SaveAsync();
+            return StatusCode(201);
+       }
+
        [HttpPost("Login")]
        public async Task<IActionResult> Login(LoginReqDto loginReq){
             var user = await _unitOfWork.UserRepository.Authenticate(loginReq.userName!,loginReq.password!);
@@ -53,7 +65,7 @@ namespace WebAPI.Controllers
             
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = signingCredentials
             };
 
