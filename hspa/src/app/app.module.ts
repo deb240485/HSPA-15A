@@ -14,7 +14,6 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { PropertyCardComponent } from './property/property-card/property-card.component';
 import { PropertyListComponent } from './property/property-list/property-list.component';
 import { HousingService } from './services/housing.service';
-import { UserService } from './services/user.service';
 import { AddPropertyComponent } from './property/add-property/add-property.component';
 import { PropertyDetailComponent } from './property/property-detail/property-detail.component';
 import { UserLoginComponent } from './user/user-login/user-login.component';
@@ -64,7 +63,6 @@ const appRoutes: Routes = [
   ],
   providers: [
     HousingService,
-    UserService,
     AlertifyService,
     AuthenticationService,
     PropertyDetailResolverService

@@ -24,17 +24,18 @@ export class UserLoginComponent implements OnInit {
 
   onLogin(loginForm: NgForm){
     console.log(loginForm.value);
-    const token = this.authService.authUser(loginForm.value);
-    if(token)
-    {
-      localStorage.setItem('token',token.userName);
-      this.alertify.success('Login Successful');
-      this.router.navigate(['/']);
-    }
-    else{
-      this.alertify.error('Please enter correct user name or password');
-    }
-
+    this.authService.authUser(loginForm.value).subscribe(
+      (response:any) => {
+        console.log(response);
+        const user = response;
+        localStorage.setItem('userName',user.userName);
+        localStorage.setItem('token',user.token);
+        this.alertify.success('Login Successful');
+        this.router.navigate(['/']);
+      },error => {
+        console.log(error);
+        this.alertify.error(error.error);
+      }
+    );
   }
-
 }

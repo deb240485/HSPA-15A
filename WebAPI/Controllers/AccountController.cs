@@ -22,6 +22,8 @@ namespace WebAPI.Controllers
        [HttpPost("Register")]
        public async Task<IActionResult> Register(LoginReqDto loginReq)
        {
+            if(loginReq.userName == null || loginReq.userName == string.Empty)
+                return BadRequest("UserName cannot be empty");
             if(await _unitOfWork.UserRepository.UserAlreadyExists(loginReq.userName!))
                 return BadRequest("User already exists , please try different User Name.");
             
@@ -36,7 +38,7 @@ namespace WebAPI.Controllers
             var user = await _unitOfWork.UserRepository.Authenticate(loginReq.userName!,loginReq.password!);
 
             if(user == null){
-                return Unauthorized();
+                return Unauthorized("Invalid User Name or Password");
             }
 
             var loginRespDto = new LoginRespDto();

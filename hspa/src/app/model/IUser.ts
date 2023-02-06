@@ -1,6 +1,12 @@
 export interface IUser{
   userName: string;
-  userEmail: string;
+  userEmail?: string;
   password: string;
-  mobile: number;
+  mobile?: number;
+}
+
+export interface IUserLogin{
+  userName: string;
+  password: string;
+  token: string;
 }

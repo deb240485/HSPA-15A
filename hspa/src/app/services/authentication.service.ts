@@ -1,18 +1,22 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IUser } from '../model/IUser';
+import { IUser, IUserLogin } from '../model/IUser';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor() { }
+  baseURL = environment.baseUrl;
 
-  authUser(user: IUser){
-    let userArray = [];
-    if(localStorage.getItem('Users')){
-      userArray = JSON.parse(localStorage.getItem('Users')!);
-    }
-    return userArray.find((u: { userName: string; password: string; }) =>u.userName === user.userName && u.password === user.password);
+  constructor(private http: HttpClient) { }
+
+  authUser(user: IUserLogin){
+    return this.http.post(this.baseURL + '/Account/Login',user);
+  }
+
+  registerUser(user: IUser){
+    return this.http.post(this.baseURL+'/Account/Register',user);
   }
 }
