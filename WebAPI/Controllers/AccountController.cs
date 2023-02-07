@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Dtos;
+using WebAPI.Errors;
+using WebAPI.Extensions;
 using WebAPI.IRepository;
 using WebAPI.Models;
 
@@ -22,10 +24,20 @@ namespace WebAPI.Controllers
        [HttpPost("Register")]
        public async Task<IActionResult> Register(LoginReqDto loginReq)
        {
-            if(loginReq.userName == null || loginReq.userName == string.Empty)
-                return BadRequest("UserName cannot be empty");
-            if(await _unitOfWork.UserRepository.UserAlreadyExists(loginReq.userName!))
-                return BadRequest("User already exists , please try different User Name.");
+            ApiError apiError = new ApiError();
+
+            if(loginReq.userName!.IsEmpty()|| loginReq.password!.IsEmpty()){
+                apiError.ErrorCode = BadRequest().StatusCode;
+                apiError.ErrorMessage = "UserName or password cannot be empty";
+                return BadRequest(apiError);
+            }
+
+            if(await _unitOfWork.UserRepository.UserAlreadyExists(loginReq.userName!)){
+
+                apiError.ErrorCode = BadRequest().StatusCode;
+                apiError.ErrorMessage = "User already exists , please try different User Name."; 
+                return BadRequest(apiError);
+            }    
             
             _unitOfWork.UserRepository.Register(loginReq.userName!,loginReq.password!);
 
@@ -37,8 +49,13 @@ namespace WebAPI.Controllers
        public async Task<IActionResult> Login(LoginReqDto loginReq){
             var user = await _unitOfWork.UserRepository.Authenticate(loginReq.userName!,loginReq.password!);
 
+            ApiError apiError = new ApiError();
+
             if(user == null){
-                return Unauthorized("Invalid User Name or Password");
+                apiError.ErrorCode = Unauthorized().StatusCode;
+                apiError.ErrorMessage = "Invalid User Name or Password";
+                apiError.ErrorDetails = "Provided User Name or Password does not exists";
+                return Unauthorized(apiError);
             }
 
             var loginRespDto = new LoginRespDto();
