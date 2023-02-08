@@ -6,6 +6,8 @@ namespace WebAPI.IRepository
 
         IUserRepository UserRepository { get; }
 
+        IPropertyRepository propertyRepository { get; }
+
         Task<bool> SaveAsync();
     }
 }

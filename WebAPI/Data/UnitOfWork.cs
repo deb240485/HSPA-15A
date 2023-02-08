@@ -16,6 +16,8 @@ namespace WebAPI.Data
 
         public IUserRepository UserRepository => new UserRepository(_conContext);
 
+        public IPropertyRepository propertyRepository => new PropertyRepository(_conContext);
+
         public async Task<bool> SaveAsync()
         {
             return await _conContext.SaveChangesAsync() > 0;

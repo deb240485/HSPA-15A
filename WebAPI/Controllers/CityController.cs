@@ -7,9 +7,7 @@ using WebAPI.Models;
 
 
 namespace WebAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
+{    
     [Authorize]
     public class CityController : BaseController
     {
