@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Property } from '../model/Property';
 import { Observable } from 'rxjs';
@@ -29,12 +29,6 @@ export class HousingService {
 
   getProperty(id: number) {
       return this.http.get<Property>(this.baseUrl+ '/property/detail/'+ id.toString());
-    // return this.getAllProperties(1).pipe(
-    //   map(propertiesArray => {
-    //     // throw new Error('Some error');
-    //     return propertiesArray.find(p => p.id === id) as Property;
-    //   })
-    // );
   }
 
   getAllProperties(SellRent?: number): Observable<Property[]>{
@@ -42,7 +36,12 @@ export class HousingService {
   }
 
   addProperty(property: Property){
-    return this.http.post(this.baseUrl + '/property', property);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer '+ localStorage.getItem('token')
+      })
+    };
+    return this.http.post(this.baseUrl + '/property', property, httpOptions);
   }
 
   newPropID(){
