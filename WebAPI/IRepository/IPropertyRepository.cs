@@ -6,6 +6,8 @@ namespace WebAPI.IRepository
     {
         Task<IEnumerable<Property>>GetPropertiesAsync(int sellRent);
 
+        Task<Property> GetPropertyAsync(int id);
+
         void AddProperty (Property property);
 
         void DeleteProperty(int id);

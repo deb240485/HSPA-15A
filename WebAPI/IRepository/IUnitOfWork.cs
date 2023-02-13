@@ -6,7 +6,11 @@ namespace WebAPI.IRepository
 
         IUserRepository UserRepository { get; }
 
-        IPropertyRepository propertyRepository { get; }
+        IPropertyRepository propertyRepository { get; } 
+
+        IPropertyTypeRepository propertyTypeRepository { get; }
+
+        IFurnishingTypeRepository furnishingTypeRepository { get; }
 
         Task<bool> SaveAsync();
     }

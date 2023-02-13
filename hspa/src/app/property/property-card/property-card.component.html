@@ -18,7 +18,10 @@
     {{propertyCard.city}}
 
     <h6 class="mt-2">{{propertyCard.furnishingType}}
-      <span *ngIf="propertyCard.furnishingType !== 'Unfurnished'">Furnished</span> | Ready to Move</h6>
+      <span *ngIf="propertyCard.furnishingType !== 'Unfurnished'">Furnished</span>
+      <span *ngIf="propertyCard.readyToMove"> | Ready to Move </span>
+      <span *ngIf="!propertyCard.readyToMove"> | Posession : {{propertyCard.estPossessionOn | date}}</span>
+    </h6>
 
     <hr class="mt-0 mb2">
 

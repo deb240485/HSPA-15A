@@ -13,7 +13,7 @@ namespace WebAPI.Data.Repository
         }
         public void AddProperty(Property property)
         {
-            throw new NotImplementedException();
+            _conContext.Properties!.Add(property);
         }
 
         public void DeleteProperty(int id)
@@ -30,6 +30,17 @@ namespace WebAPI.Data.Repository
             .Where(p => p.SellRent == sellRent)
             .ToListAsync();
             return properties;
+        }
+
+        public async Task<Property> GetPropertyAsync(int id)
+        {
+            var property = await _conContext.Properties!
+                .Include(p => p.PropertyType)
+                .Include(p => p.City)
+                .Include(p => p.FurnishingType)
+                .Where(p => p.Id == id)
+                .FirstAsync();
+            return property;    
         }
     }
 }
