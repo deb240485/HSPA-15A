@@ -11,10 +11,13 @@ namespace WebAPI.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public PropertyController(IUnitOfWork unitOfWork, IMapper mapper)
+
+        private readonly IPhotoService _photoService;
+        public PropertyController(IUnitOfWork unitOfWork, IMapper mapper, IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _photoService = photoService;
         }
 
         [HttpGet("list/{sellRent}")]
@@ -46,6 +49,16 @@ namespace WebAPI.Controllers
             _unitOfWork.propertyRepository.AddProperty(property);
             await _unitOfWork.SaveAsync();
             return StatusCode(201);
+        }
+
+        [HttpPost("photo/{id}")]
+        [Authorize]
+        public async Task<IActionResult> Photo(IFormFile file, int propId){
+            var result = await _photoService.UploadPhotoAsync(file);
+            if(result.Error != null)
+                return BadRequest(result.Error.Message);
+
+            return Ok(201);
         }
     }
 }

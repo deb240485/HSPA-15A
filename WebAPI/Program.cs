@@ -6,6 +6,7 @@ using WebAPI.IRepository;
 using WebAPI.Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IPhotoService,PhotoService>();
 
 //var secretKey = builder.Configuration.GetSection("AppSettings:Key").Value;
 
