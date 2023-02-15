@@ -12,6 +12,8 @@ namespace WebAPI.Mapper
 
             CreateMap<Property,PropertyDto>().ReverseMap();
 
+            CreateMap<Photo,PhotoDto>().ReverseMap();
+
             CreateMap<Property,PropertyListDto>()
                 .ForMember(d => d.City, opt => opt.MapFrom(src => src.City!.Name))
                 .ForMember(d => d.PropertyType, opt => opt.MapFrom(src => src.PropertyType!.Name))

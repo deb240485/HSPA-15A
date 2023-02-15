@@ -53,12 +53,26 @@ namespace WebAPI.Controllers
 
         [HttpPost("photo/{id}")]
         [Authorize]
-        public async Task<IActionResult> Photo(IFormFile file, int propId){
+        public async Task<IActionResult> Photo(IFormFile file, int id){
             var result = await _photoService.UploadPhotoAsync(file);
             if(result.Error != null)
                 return BadRequest(result.Error.Message);
 
-            return Ok(201);
+            var property = await _unitOfWork.propertyRepository.GetPropertyPhotoAsync(id);
+            var photo = new Photo {
+                ImageUrl = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId,
+                LastUpdatedBy = GetUserId()
+            };
+
+            if(property.Photos!.Count == 0){
+                photo.IsPrimary = true;
+            }
+
+            property.Photos.Add(photo);
+
+            await _unitOfWork.SaveAsync();
+            return StatusCode(201);
         }
     }
 }

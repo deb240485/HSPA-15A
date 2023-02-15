@@ -1,4 +1,5 @@
 import { Data } from "@angular/router";
+import { IPhoto } from "./IPhoto";
 import { IPropertyBase } from "./IPropertyBase";
 
 export class Property implements IPropertyBase{
@@ -28,6 +29,7 @@ export class Property implements IPropertyBase{
   estPossessionOn!: Date;
   image?: string;
   description?: string;
+  photos?: IPhoto[];
   // postedOn!: string;
   // postedBy!: number;
 }

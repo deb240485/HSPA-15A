@@ -13,7 +13,7 @@ export class PropertyDetailComponent implements OnInit {
 
   public propertyId!: number;
   property = new Property();
-
+  public mainphotoUrl!: string;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages!: NgxGalleryImage[];
 
@@ -27,22 +27,12 @@ export class PropertyDetailComponent implements OnInit {
     this.route.data.subscribe(
       (data) => {
         this.property = data['prp'];
+        console.log(this.property.photos);
       }
     );
 
 
     this.property.age = this.housingService.getPropertyAge(this.property.estPossessionOn);
-    // this.route.params.subscribe(
-    //   (params)=> {
-    //     this.propertyId = +params['id'];
-    //     this.housingService.getProperty(this.propertyId).subscribe(
-    //       (data: Property) => {
-    //         this.property = data;
-    //       }, error => this.router.navigate(['/'])
-    //     );
-    //   }
-    // );
-
 
     this.galleryOptions = [
       {
@@ -54,33 +44,24 @@ export class PropertyDetailComponent implements OnInit {
       }
     ];
 
-    this.galleryImages = [
-      {
-        small: 'assets/images/prop-1_internal-1.jpg',
-        medium: 'assets/images/prop-1_internal-1.jpg',
-        big: 'assets/images/prop-1_internal-1.jpg'
-      },
-      {
-        small: 'assets/images/prop-1_internal-2.jpg',
-        medium: 'assets/images/prop-1_internal-2.jpg',
-        big: 'assets/images/prop-1_internal-2.jpg'
-      },
-      {
-        small: 'assets/images/prop-1_internal-3.jpg',
-        medium: 'assets/images/prop-1_internal-3.jpg',
-        big: 'assets/images/prop-1_internal-3.jpg'
-      },
-      {
-        small: 'assets/images/prop-1_internal-4.jpg',
-        medium: 'assets/images/prop-1_internal-4.jpg',
-        big: 'assets/images/prop-1_internal-4.jpg'
-      },
-      {
-        small: 'assets/images/prop-1_internal-5.jpg',
-        medium: 'assets/images/prop-1_internal-5.jpg',
-        big: 'assets/images/prop-1_internal-5.jpg'
-      }
-    ];
+    this.galleryImages = this.getPropertyPhotos();
+  }
 
+  getPropertyPhotos(): NgxGalleryImage[] {
+    const photoUrls: NgxGalleryImage[] = [];
+    for (const photo of this.property.photos!) {
+      if(photo.isPrimary){
+        this.mainphotoUrl = photo.imageUrl;
+      }else{
+        photoUrls.push({
+          small: photo.imageUrl,
+          medium: photo.imageUrl,
+          big: photo.imageUrl
+        });
+      }
+    }
+    return photoUrls;
   }
 }
+
+

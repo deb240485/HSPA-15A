@@ -11,5 +11,7 @@ namespace WebAPI.IRepository
         void AddProperty (Property property);
 
         void DeleteProperty(int id);
+
+        Task<Property> GetPropertyPhotoAsync(int id);
     }
 }
