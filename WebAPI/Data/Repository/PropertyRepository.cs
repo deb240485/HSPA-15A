@@ -33,7 +33,7 @@ namespace WebAPI.Data.Repository
             return properties;
         }
 
-        public async Task<Property> GetPropertyAsync(int id)
+        public async Task<Property?> GetPropertyAsync(int id)
         {
             var property = await _conContext.Properties!
                 .Include(p => p.PropertyType)
@@ -41,16 +41,16 @@ namespace WebAPI.Data.Repository
                 .Include(p => p.FurnishingType)
                 .Include(p => p.Photos)
                 .Where(p => p.Id == id)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
             return property;    
         }
 
-        public async Task<Property> GetPropertyPhotoAsync(int id)
+        public async Task<Property?> GetPropertyPhotoAsync(int id)
         {
             var property = await _conContext.Properties!
                 .Include(p => p.Photos)
                 .Where(p => p.Id == id)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
             return property;    
         }
     }

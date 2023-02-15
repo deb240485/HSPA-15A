@@ -65,14 +65,45 @@ namespace WebAPI.Controllers
                 LastUpdatedBy = GetUserId()
             };
 
-            if(property.Photos!.Count == 0){
+            if(property?.Photos!.Count == 0){
                 photo.IsPrimary = true;
             }
 
-            property.Photos.Add(photo);
+            property?.Photos!.Add(photo);
 
             await _unitOfWork.SaveAsync();
             return StatusCode(201);
+        }
+
+        [HttpPost("primaryphoto/{id}/{publicId}")]
+        [Authorize]
+        public async Task<IActionResult> PrimaryPhoto(int id, string publicId){
+            var userId = GetUserId();
+
+            var property = await _unitOfWork.propertyRepository.GetPropertyAsync(id);
+
+            if(property == null)
+                return BadRequest("No such property or photo exists");
+
+            if(property.PostedBy != userId)
+                return BadRequest("You are not authorized to set primary photo");
+            
+            var photo = property.Photos!.FirstOrDefault(p => p.PublicId == publicId);
+
+            if(photo == null)
+                return BadRequest("No such property or photo exists");
+
+            if(photo.IsPrimary)
+                return BadRequest("This is already a primary photo");
+            
+            var currentPrimary = property.Photos!.FirstOrDefault(p => p.IsPrimary);
+            if(currentPrimary != null) currentPrimary.IsPrimary = false;
+
+            photo.IsPrimary = true;
+
+            if(await _unitOfWork.SaveAsync()) return NoContent();
+
+            return BadRequest("Some error has occured, failed to set primary photo");
         }
     }
 }
