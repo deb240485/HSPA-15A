@@ -25,6 +25,7 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { HttpErrorInterceptorService } from './services/httperror-interceptor.service';
+import { PhotoEditorComponent } from './property/photo-editor/photo-editor.component';
 
 const appRoutes: Routes = [
   {path: '', component: PropertyListComponent},
@@ -47,7 +48,8 @@ const appRoutes: Routes = [
     UserLoginComponent,
     UserRegisterComponent,
     FilterPipe,
-    SortPipe
+    SortPipe,
+    PhotoEditorComponent
   ],
   imports: [
     BrowserModule,

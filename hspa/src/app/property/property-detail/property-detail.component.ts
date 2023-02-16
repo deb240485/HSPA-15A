@@ -47,6 +47,10 @@ export class PropertyDetailComponent implements OnInit {
     this.galleryImages = this.getPropertyPhotos();
   }
 
+  changePrimaryPhoto(mainphotoUrl: string){
+    this.mainphotoUrl = mainphotoUrl;
+  }
+
   getPropertyPhotos(): NgxGalleryImage[] {
     const photoUrls: NgxGalleryImage[] = [];
     for (const photo of this.property.photos!) {
