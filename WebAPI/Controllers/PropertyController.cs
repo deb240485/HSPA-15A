@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
 
         [HttpPost("photo/{id}")]
         [Authorize]
-        public async Task<IActionResult> Photo(IFormFile file, int id){
+        public async Task<ActionResult<PhotoDto>> Photo(IFormFile file, int id){
             var result = await _photoService.UploadPhotoAsync(file);
             if(result.Error != null)
                 return BadRequest(result.Error.Message);
@@ -71,8 +71,9 @@ namespace WebAPI.Controllers
 
             property?.Photos!.Add(photo);
 
-            await _unitOfWork.SaveAsync();
-            return StatusCode(201);
+            if (await _unitOfWork.SaveAsync()) return _mapper.Map<PhotoDto>(photo);
+            
+            return BadRequest("Some problem occured in uploading photo, please retry");
         }
 
         [HttpPost("primaryphoto/{id}/{publicId}")]

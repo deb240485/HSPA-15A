@@ -26,6 +26,7 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { HttpErrorInterceptorService } from './services/httperror-interceptor.service';
 import { PhotoEditorComponent } from './property/photo-editor/photo-editor.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 const appRoutes: Routes = [
   {path: '', component: PropertyListComponent},
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     TabsModule.forRoot(),
     ButtonsModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    NgxGalleryModule
+    NgxGalleryModule,
+    FileUploadModule
   ],
   providers: [
     {
